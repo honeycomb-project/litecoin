@@ -1,16 +1,15 @@
 *.tar.gz
 
 *.exe
-src/litecoin
-src/litecoind
-src/litecoin-cli
-src/litecoin-tx
-src/test/test_litecoin
-src/test/test_litecoin_fuzzy
-src/qt/test/test_litecoin-qt
+src/honeycomb
+src/honeycombd
+src/honeycomb-cli
+src/honeycomb-tx
+src/test/test_honeycomb
+src/test/test_honeycomb_fuzzy
+src/qt/test/test_honeycomb-qt
 
 # autoreconf
-Makefile.in
 aclocal.m4
 autom4te.cache/
 build-aux/config.guess
@@ -28,7 +27,6 @@ build-aux/compile
 build-aux/test-driver
 config.log
 config.status
-configure
 libtool
 src/config/bitcoin-config.h
 src/config/bitcoin-config.h.in
@@ -44,7 +42,6 @@ src/qt/forms/ui_*.h
 
 src/qt/test/moc*.cpp
 
-.deps
 .dirstamp
 .libs
 .*.swp
@@ -55,7 +52,6 @@ src/qt/test/moc*.cpp
 *.pyc
 *.o
 *.o-*
-*.patch
 *.a
 *.pb.cc
 *.pb.h
@@ -73,13 +69,12 @@ src/qt/test/moc*.cpp
 
 # Compilation and Qt preprocessor part
 *.qm
-Makefile
-litecoin-qt
-Litecoin-Qt.app
+honeycomb-qt
+Honeycomb-Qt.app
 
 # Unit-tests
 Makefile.test
-litecoin-qt_test
+honeycomb-qt_test
 
 # Resources cpp
 qrc_*.cpp
@@ -92,7 +87,7 @@ build
 *.gcno
 *.gcda
 /*.info
-test_litecoin.coverage/
+test_honeycomb.coverage/
 total.coverage/
 coverage_percent.txt
 

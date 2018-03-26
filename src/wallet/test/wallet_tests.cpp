@@ -229,7 +229,7 @@ BOOST_AUTO_TEST_CASE(coin_selection_tests)
         // they tried to consolidate 10 50k coins into one 500k coin, and ended up with 50k in change
         empty_wallet();
         for (int j = 0; j < 20; j++)
-            add_coin(50000 * COIN);
+            add_coin(64 * COIN);
 
         BOOST_CHECK( testWallet.SelectCoinsMinConf(500000 * COIN, 1, 1, 0, vCoins, setCoinsRet, nValueRet));
         BOOST_CHECK_EQUAL(nValueRet, 500000 * COIN); // we should get the exact amount
@@ -364,12 +364,6 @@ BOOST_AUTO_TEST_CASE(ApproximateBestSubset)
     empty_wallet();
 }
 
-static void AddKey(CWallet& wallet, const CKey& key)
-{
-    LOCK(wallet.cs_wallet);
-    wallet.AddKeyPubKey(key, key.GetPubKey());
-}
-
 BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
 {
     LOCK(cs_main);
@@ -385,7 +379,8 @@ BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
     // and new block files.
     {
         CWallet wallet;
-        AddKey(wallet, coinbaseKey);
+        LOCK(wallet.cs_wallet);
+        wallet.AddKeyPubKey(coinbaseKey, coinbaseKey.GetPubKey());
         BOOST_CHECK_EQUAL(nullBlock, wallet.ScanForWalletTransactions(oldTip));
         BOOST_CHECK_EQUAL(wallet.GetImmatureBalance(), 100 * COIN);
     }
@@ -398,7 +393,8 @@ BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
     // file.
     {
         CWallet wallet;
-        AddKey(wallet, coinbaseKey);
+        LOCK(wallet.cs_wallet);
+        wallet.AddKeyPubKey(coinbaseKey, coinbaseKey.GetPubKey());
         BOOST_CHECK_EQUAL(oldTip, wallet.ScanForWalletTransactions(oldTip));
         BOOST_CHECK_EQUAL(wallet.GetImmatureBalance(), 50 * COIN);
     }
@@ -603,7 +599,8 @@ public:
         wallet.reset(new CWallet(std::unique_ptr<CWalletDBWrapper>(new CWalletDBWrapper(&bitdb, "wallet_test.dat"))));
         bool firstRun;
         wallet->LoadWallet(firstRun);
-        AddKey(*wallet, coinbaseKey);
+        LOCK(wallet->cs_wallet);
+        wallet->AddKeyPubKey(coinbaseKey, coinbaseKey.GetPubKey());
         wallet->ScanForWalletTransactions(chainActive.Genesis());
     }
 
@@ -638,7 +635,7 @@ public:
 BOOST_FIXTURE_TEST_CASE(ListCoins, ListCoinsTestingSetup)
 {
     std::string coinbaseAddress = coinbaseKey.GetPubKey().GetID().ToString();
-    LOCK2(cs_main, wallet->cs_wallet);
+    LOCK(wallet->cs_wallet);
 
     // Confirm ListCoins initially returns 1 coin grouped under coinbaseKey
     // address.
